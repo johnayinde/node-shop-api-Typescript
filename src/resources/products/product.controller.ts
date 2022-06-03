@@ -61,6 +61,24 @@ class ProductController {
         }
     };
 
+    static deleteMultipleProducts = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<Response | void> => {
+        try {
+            const { productIds } = req.body;
+
+            const doc = await ProductService.deleteMultiple(productIds);
+
+            console.log(doc);
+
+            res.status(201).json('Items Deleted');
+        } catch (error: any) {
+            next(new HttpException(400, error.message));
+        }
+    };
+
     static getAllProducts = async (
         req: Request,
         res: Response,

@@ -1,11 +1,16 @@
 import { Router } from 'express';
 import validation from '@/middleware/validation.middleware';
-import { validateProduct, validateUpdateProduct } from './product.validation';
+import {
+    validateDeleteProducts,
+    validateProduct,
+    validateUpdateProduct,
+} from './product.validation';
 import {
     verifyToken,
     verifyTokenAndAdmin,
 } from '@/middleware/authenticated.middleware';
 import ProductController from './product.controller';
+import ProductService from './product.service';
 
 const productRoute = Router();
 
@@ -21,11 +26,18 @@ productRoute
 productRoute
     .route('/:id')
     .put(
-        validation(validateUpdateProduct),
         verifyTokenAndAdmin,
+        validation(validateUpdateProduct),
         ProductController.updateProduct
     )
     .delete(verifyTokenAndAdmin, ProductController.deleteProduct)
     .get(ProductController.getProduct);
 
+productRoute
+    .route('/many')
+    .delete(
+        verifyTokenAndAdmin,
+        validation(validateDeleteProducts),
+        ProductService.deleteMultiple
+    );
 export default productRoute;

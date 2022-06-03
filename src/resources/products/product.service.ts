@@ -1,5 +1,6 @@
 import productModel from './product.model';
 import IProduct from './product.interface';
+import { Types } from 'mongoose';
 
 export default class ProductService {
     /**
@@ -62,6 +63,22 @@ export default class ProductService {
             return await productModel.findByIdAndDelete(id);
         } catch (error) {
             return new Error('Unable to delete product');
+        }
+    }
+
+    static async deleteMultiple(productIds: string[]) {
+        try {
+            const formatIds: Types.ObjectId[] = [];
+
+            productIds.forEach((id: string) => {
+                formatIds.push(new Types.ObjectId(id));
+            });
+
+            return await productModel.deleteMany({
+                _id: { $in: formatIds },
+            });
+        } catch (error) {
+            return new Error('Unable to delete products');
         }
     }
 

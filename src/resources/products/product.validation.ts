@@ -17,5 +17,8 @@ const validateUpdateProduct = Joi.object({
     size: Joi.string(),
     categories: Joi.array(),
 });
+const validateDeleteProducts = Joi.object({
+    productIds: Joi.array().items(Joi.string()).required()
+});
 
-export { validateProduct, validateUpdateProduct };
+export { validateProduct, validateUpdateProduct, validateDeleteProducts };
