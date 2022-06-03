@@ -7,6 +7,7 @@ import helmet from 'helmet';
 import ErrorMiddleware from '@/middleware/error.middleware';
 import 'dotenv/config';
 import { userRoute } from './routes/index';
+import productRoute from './resources/products/product.route';
 
 class App {
     app: Application = express();
@@ -23,6 +24,7 @@ class App {
 
     initialiseControllers() {
         this.app.use('/users', userRoute);
+        this.app.use('/products', productRoute);
     }
 
     initialiseErrorHandling() {

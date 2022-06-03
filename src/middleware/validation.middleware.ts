@@ -16,7 +16,7 @@ function validationMiddleware(schema: Joi.Schema): RequestHandler {
         const { value, error } = schema.validate(req.body, validationOptions);
 
         if (error) {
-            res.status(400).send({ errors: error });
+            res.status(400).send({ errors: error.message });
         }
 
         console.log(req.body);
