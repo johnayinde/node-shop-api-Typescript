@@ -2,6 +2,7 @@ import userModel from './user.model';
 import { encodeToken } from '../../utils/token';
 import User from './user.interface';
 import { Types } from 'mongoose';
+import jwt from 'jsonwebtoken';
 
 export default class UserService {
     /**
@@ -31,18 +32,19 @@ export default class UserService {
      * login a User
      */
 
-    static async loginUser(
-        email: string,
-        password: string
-    ): Promise<Error | string> {
+    static async loginUser(email: string, password: string) {
         try {
-            const user = await userModel.findOne({ email });
+            const user = await userModel.findOne(
+                { email },
+                { createdAt: 0, updatedAt: 0 }
+            );
 
             if (!user)
                 throw new Error('Unable to fine user with tha Email Address');
 
             if (await user.isValidPassword(password)) {
-                return encodeToken(user);
+                const token = encodeToken(user);
+                return { token, user };
             }
             throw new Error('Invalid credentials');
         } catch (error) {

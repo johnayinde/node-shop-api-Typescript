@@ -28,9 +28,9 @@ class UserController {
         try {
             const { email, password } = req.body;
 
-            const token = await UserService.loginUser(email, password);
+            const loginUser = await UserService.loginUser(email, password);
 
-            res.status(201).json({ token });
+            res.status(201).json({ ...loginUser });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
