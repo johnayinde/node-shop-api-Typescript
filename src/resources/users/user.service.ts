@@ -43,7 +43,11 @@ export default class UserService {
                 throw new Error('Unable to fine user with tha Email Address');
 
             if (await user.isValidPassword(password)) {
+                console.log('create token');
+
                 const token = encodeToken(user);
+
+                console.log({ token, user });
                 return { token, user };
             }
             throw new Error('Invalid credentials');
