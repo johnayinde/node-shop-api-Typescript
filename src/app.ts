@@ -6,16 +6,20 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 import ErrorMiddleware from '@/middleware/error.middleware';
 import 'dotenv/config';
-import { userRoute } from './routes/index';
-import productRoute from './resources/products/product.route';
+import {
+    userRoute,
+    productRoute,
+    cartRoute,
+    categoryRoute,
+} from './routes/index';
 
 class App {
     app: Application = express();
     port: any = process.env.PORT;
 
     initialiseMiddleware() {
-        this.app.use(helmet());
         this.app.use(cors());
+        this.app.use(helmet());
         this.app.use(compression());
         this.app.use(morgan('dev'));
         this.app.use(express.json());
@@ -25,6 +29,8 @@ class App {
     initialiseControllers() {
         this.app.use('/users', userRoute);
         this.app.use('/products', productRoute);
+        this.app.use('/carts', cartRoute);
+        this.app.use('/categories', categoryRoute);
     }
 
     initialiseErrorHandling() {

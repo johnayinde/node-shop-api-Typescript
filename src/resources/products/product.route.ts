@@ -10,9 +10,16 @@ import {
     verifyTokenAndAdmin,
 } from '@/middleware/authenticated.middleware';
 import ProductController from './product.controller';
-import ProductService from './product.service';
 
 const productRoute = Router();
+
+productRoute
+    .route('/many')
+    .delete(
+        verifyTokenAndAdmin,
+        validation(validateDeleteProducts),
+        ProductController.deleteMultipleProducts
+    );
 
 productRoute
     .route('/')
@@ -33,11 +40,4 @@ productRoute
     .delete(verifyTokenAndAdmin, ProductController.deleteProduct)
     .get(ProductController.getProduct);
 
-productRoute
-    .route('/many')
-    .delete(
-        verifyTokenAndAdmin,
-        validation(validateDeleteProducts),
-        ProductService.deleteMultiple
-    );
 export default productRoute;

@@ -23,7 +23,9 @@ export default class ProductService {
                 size,
                 price,
                 categories,
-            }).save();
+            }).populate('categories');
+
+            await product.save();
 
             return product;
         } catch (error) {
@@ -37,13 +39,15 @@ export default class ProductService {
 
             if (!exist) return new Error('Product does not exist');
 
-            const updatedProduct = await productModel.findByIdAndUpdate(
-                id,
-                {
-                    $set: product,
-                },
-                { new: true }
-            );
+            const updatedProduct = await productModel
+                .findByIdAndUpdate(
+                    id,
+                    {
+                        $set: product,
+                    },
+                    { new: true }
+                )
+                .populate('categories');
 
             return updatedProduct;
         } catch (error) {
@@ -73,10 +77,13 @@ export default class ProductService {
             productIds.forEach((id: string) => {
                 formatIds.push(new Types.ObjectId(id));
             });
+            console.log('formatedIds', formatIds);
 
-            return await productModel.deleteMany({
+            const docs = await productModel.deleteMany({
                 _id: { $in: formatIds },
             });
+
+            return docs;
         } catch (error) {
             return new Error('Unable to delete products');
         }

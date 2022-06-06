@@ -23,7 +23,7 @@ class ProductController {
                 categories
             );
 
-            res.status(201).json({ product });
+            res.status(201).json({ payload: product });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -39,7 +39,10 @@ class ProductController {
 
             const updatedProduct = await ProductService.update(id, req.body);
 
-            res.status(201).json({ updatedProduct });
+            if (!updatedProduct)
+                return res.status(404).json('Item does not exist');
+
+            res.status(201).json({ payload: updatedProduct });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -53,9 +56,11 @@ class ProductController {
         try {
             const { id } = req.params;
 
-            await ProductService.delete(id);
+            const doc = await ProductService.delete(id);
 
-            res.status(201).json('Item Deleted');
+            if (!doc) return res.status(404).json('Item does not exist');
+
+            res.status(201).json({ payload: doc });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -71,9 +76,9 @@ class ProductController {
 
             const doc = await ProductService.deleteMultiple(productIds);
 
-            console.log(doc);
+            if (!doc) return res.status(404).json('Items not deleted');
 
-            res.status(201).json('Items Deleted');
+            return res.status(201).json({ payload: doc });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -89,7 +94,7 @@ class ProductController {
         try {
             const products = await ProductService.getProducts(newQuery);
 
-            return res.status(201).json({ products });
+            return res.status(201).json({ payload: products });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -103,7 +108,7 @@ class ProductController {
         try {
             const product = await ProductService.getProduct(req.params.id);
 
-            return res.status(201).json({ product });
+            return res.status(201).json({ payload: product });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }

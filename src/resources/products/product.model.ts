@@ -22,10 +22,11 @@ const ProductSchema = new Schema(
             type: Number,
         },
         categories: {
-            type: Array,
+            type: [Schema.Types.ObjectId],
+            ref: 'category',
         },
     },
     { timestamps: true }
 );
 
-export default model<IProduct>('Product', ProductSchema);
+export default model<IProduct>('product', ProductSchema);
