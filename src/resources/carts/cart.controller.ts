@@ -10,8 +10,10 @@ class CartController {
         res: Response,
         next: NextFunction
     ): Promise<Response | void> => {
+        const { userId, productId, quantity } = req.body;
         try {
-            const cart = await CartService.create(req.body as ICart);
+            const cart = await CartService.create(userId, productId, quantity);
+            // console.log({ cart });
 
             res.status(201).json({ cart });
         } catch (error: any) {
