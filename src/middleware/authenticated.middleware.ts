@@ -18,7 +18,7 @@ async function verifyToken(req: Request, res: Response, next: NextFunction) {
         if (payload instanceof jwt.JsonWebTokenError)
             return next(new HttpException(401, 'Unauthorised'));
 
-        console.log('payload', payload);
+        // console.log('payload', payload);
         const user = await userModel
             .findById(payload.id)
             .select('-password')
