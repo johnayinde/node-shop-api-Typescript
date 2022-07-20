@@ -1,11 +1,13 @@
 import { Document } from 'mongoose';
+import IProduct from '../products/product.interface';
 
 interface products {
-    productId: string;
+    productId: IProduct;
     quantity: number;
 }
 
-export default interface ICart extends Document {
+export default interface ICart {
+    total: number;
     userId: string;
-    products: products[];
+    products: [products];
 }

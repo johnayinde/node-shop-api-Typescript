@@ -1,3 +1,4 @@
+import { number } from 'joi';
 import { Schema, model } from 'mongoose';
 import ICart from './cart.interface';
 
@@ -7,10 +8,14 @@ const CartSchema = new Schema(
             type: String,
             required: true,
         },
+        total: {
+            type: Number,
+        },
         products: [
             {
                 productId: {
-                    type: String,
+                    type: Schema.Types.ObjectId,
+                    ref: 'product',
                 },
                 quantity: {
                     type: Number,
