@@ -1,7 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { ObjectId } from 'mongoose';
 import HttpException from '../../utils/exceptions/http.exception';
-import ICart from './cart.interface';
 import CartService from './cart.service';
 
 class CartController {

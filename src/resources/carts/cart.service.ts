@@ -2,9 +2,6 @@ import cartModel from './cart.model';
 import ICart from './cart.interface';
 import { Types } from 'mongoose';
 import productService from '../products/product.service';
-import productModel from '../products/product.model';
-import IProduct from '../products/product.interface';
-import userService from '../users/user.service';
 import userModel from '../users/user.model';
 
 export default class CartService {
@@ -30,7 +27,6 @@ export default class CartService {
 
             if (userCart) {
                 const userProduct = userCart.products.filter((item) => {
-                    // console.log('conditional', item.productId._id == productId);
                     console.log(
                         'LOOP-product exist?',
                         item.productId._id == productId
@@ -117,7 +113,7 @@ export default class CartService {
         try {
             const exist = await cartModel.exists({ _id: id });
 
-            if (!exist) return new Error('Cart does not exist');
+            if (!exist) throw new Error('Cart does not exist');
 
             const updatedCart = await cartModel.findByIdAndUpdate(
                 id,
@@ -128,23 +124,20 @@ export default class CartService {
             );
 
             return updatedCart;
-        } catch (error) {
-            return new Error('Unable to update cart');
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 
     static async delete(id: string) {
         try {
             const exist = await cartModel.findById(id);
-            console.log(exist === null);
 
-            if (exist === null) {
-                new Error('Cart does not exist');
-            }
+            if (!exist) throw Error('Cart does not exist');
 
             return await cartModel.findByIdAndDelete(id);
-        } catch (error) {
-            return new Error('Unable to delete cart');
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 
@@ -159,8 +152,8 @@ export default class CartService {
             return await cartModel.deleteMany({
                 _id: { $in: formatIds },
             });
-        } catch (error) {
-            return new Error('Unable to delete carts');
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 
@@ -168,11 +161,11 @@ export default class CartService {
         try {
             const exist = await cartModel.exists({ userId });
 
-            if (!exist) return new Error('user cart does not exist');
+            if (!exist) throw new Error('user cart does not exist');
 
             return await cartModel.findOne({ userId });
-        } catch (error) {
-            return new Error('Unable to get user cart');
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 
@@ -190,8 +183,8 @@ export default class CartService {
             console.log('no sort');
 
             return carts;
-        } catch (error) {
-            return new Error('Unable to get cart');
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 }
