@@ -43,7 +43,7 @@ class UserController {
     ): Promise<Response | void> => {
         if (!req.user) return next(new HttpException(404, 'No usser found'));
 
-        return res.status(200).json({ user: req.user });
+        res.status(200).json({ user: req.user });
     };
 
     static getAllUsers = async (
@@ -55,7 +55,7 @@ class UserController {
         try {
             const users = await UserService.getAllUsers(query);
 
-            return res.status(201).json({ users });
+            res.status(201).json({ users });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }

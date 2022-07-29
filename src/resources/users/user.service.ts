@@ -1,8 +1,6 @@
 import userModel from './user.model';
 import { encodeToken } from '../../utils/token';
 import User from './user.interface';
-import { Types } from 'mongoose';
-import jwt from 'jsonwebtoken';
 
 export default class UserService {
     /**
@@ -23,8 +21,8 @@ export default class UserService {
 
             // const accessToken = encodeToken(user);
             return user;
-        } catch (error) {
-            return new Error('Unable to create a user');
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 
