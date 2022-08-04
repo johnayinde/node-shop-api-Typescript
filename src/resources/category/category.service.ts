@@ -14,8 +14,8 @@ export default class CategoryService {
             }).save();
 
             return category;
-        } catch (error) {
-            return new Error('Unable to create a category');
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 
@@ -23,7 +23,7 @@ export default class CategoryService {
         try {
             const exist = await CategoryModel.exists({ _id: id });
 
-            if (!exist) return new Error('Category does not exist');
+            if (!exist) throw new Error('Category does not exist');
 
             const updatedCategory = await CategoryModel.findByIdAndUpdate(
                 id,
@@ -32,18 +32,22 @@ export default class CategoryService {
                 },
                 { new: true }
             );
+            console.log(updatedCategory);
 
             return updatedCategory;
-        } catch (error) {
-            return new Error('Unable to update category');
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 
     static async delete(id: string) {
         try {
+            const exist = await CategoryModel.exists({ _id: id });
+            if (!exist) throw new Error('Category does not exist');
+
             return await CategoryModel.findByIdAndDelete(id);
-        } catch (error) {
-            return new Error('Unable to delete category');
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 
@@ -59,8 +63,8 @@ export default class CategoryService {
             return await CategoryModel.deleteMany({
                 _id: { $in: formatIds },
             });
-        } catch (error) {
-            return new Error('Unable to delete categories');
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 
@@ -68,11 +72,11 @@ export default class CategoryService {
         try {
             const exist = await CategoryModel.exists({ _id: id });
 
-            if (!exist) return new Error('Category does not exist');
+            if (!exist) throw new Error('Category does not exist');
 
             return await CategoryModel.findById(id);
-        } catch (error) {
-            return new Error('Unable to get category');
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 
@@ -92,8 +96,8 @@ export default class CategoryService {
             console.log('no sort');
 
             return category;
-        } catch (error) {
-            return new Error('Unable to get category');
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 }
