@@ -6,7 +6,6 @@ import {
     validateUpdateProduct,
 } from './product.validation';
 import {
-    verifyToken,
     verifyTokenAndAdmin,
 } from '@/middleware/authenticated.middleware';
 import ProductController from './product.controller';

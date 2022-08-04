@@ -28,8 +28,8 @@ export default class ProductService {
             await product.save();
 
             return product;
-        } catch (error) {
-            return new Error('Unable to create a product');
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 
@@ -37,7 +37,7 @@ export default class ProductService {
         try {
             const exist = await productModel.exists({ _id: id });
 
-            if (!exist) return new Error('Product does not exist');
+            if (!exist) throw new Error('Product does not exist');
 
             const updatedProduct = await productModel
                 .findByIdAndUpdate(
@@ -50,23 +50,20 @@ export default class ProductService {
                 .populate('categories');
 
             return updatedProduct;
-        } catch (error) {
-            return new Error('Unable to update product');
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 
     static async delete(id: string) {
         try {
             const exist = await productModel.findById(id);
-            console.log(exist === null);
 
-            if (exist === null) {
-                new Error('Product does not exist');
-            }
+            if (!exist) throw new Error('Product does not exist');
 
             return await productModel.findByIdAndDelete(id);
-        } catch (error) {
-            return new Error('Unable to delete product');
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 
@@ -84,8 +81,8 @@ export default class ProductService {
             });
 
             return docs;
-        } catch (error) {
-            return new Error('Unable to delete products');
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 
@@ -93,13 +90,13 @@ export default class ProductService {
         try {
             const exist = await productModel.exists({ _id: id });
 
-            if (!exist) return new Error('Product does not exist');
+            if (!exist) throw new Error('Product does not exist');
 
             const product = await productModel.findById(id);
 
             return product;
-        } catch (error) {
-            return new Error('Unable to get product');
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 
@@ -120,8 +117,8 @@ export default class ProductService {
             console.log('no sort');
 
             return products;
-        } catch (error) {
-            return new Error('Unable to get product');
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 }

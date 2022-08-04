@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express';
-import { ObjectId } from 'mongoose';
 import HttpException from '../../utils/exceptions/http.exception';
 import IProduct from './product.interface';
 import ProductService from './product.service';
