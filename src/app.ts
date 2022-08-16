@@ -11,6 +11,7 @@ import {
     productRoute,
     cartRoute,
     categoryRoute,
+    orderRoute,
 } from './routes/index';
 
 class App {
@@ -31,6 +32,7 @@ class App {
         this.app.use('/products', productRoute);
         this.app.use('/carts', cartRoute);
         this.app.use('/categories', categoryRoute);
+        this.app.use('/orders', orderRoute);
     }
 
     initialiseErrorHandling() {
