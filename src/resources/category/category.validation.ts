@@ -6,7 +6,6 @@ const validateCategory = Joi.object({
 
 const validateUpdateCategory = Joi.object({
     name: Joi.string(),
-    // products: Joi.array().items(Joi.string()),
 });
 
 const validateDeleteCategories = Joi.object({

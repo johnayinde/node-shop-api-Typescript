@@ -4,7 +4,7 @@ import { Types } from 'mongoose';
 
 export default class CategoryService {
     /**
-     * Create a new Product
+     * Create a new Category
      */
 
     static async create(name: string) {
@@ -19,6 +19,9 @@ export default class CategoryService {
         }
     }
 
+    /**
+     * Update a Category by ID
+     */
     static async update(id: string, category: ICategory) {
         try {
             const exist = await CategoryModel.exists({ _id: id });
@@ -40,6 +43,9 @@ export default class CategoryService {
         }
     }
 
+    /**
+     * Delete a Category
+     */
     static async delete(id: string) {
         try {
             const exist = await CategoryModel.exists({ _id: id });
@@ -51,6 +57,12 @@ export default class CategoryService {
         }
     }
 
+    /**
+     * Delete multiple Categories
+     * - it takes list of categories Ids of type string
+     * - converts to a valid object Ids
+     * - performs a multiple delete on the Objects Ids
+     */
     static async deleteMultiple(categoryIds: string[]) {
         try {
             const formatIds: Types.ObjectId[] = [];
@@ -68,6 +80,9 @@ export default class CategoryService {
         }
     }
 
+    /**
+     * Get a Category by ID
+     */
     static async getOne(id: string) {
         try {
             const exist = await CategoryModel.exists({ _id: id });
@@ -80,6 +95,9 @@ export default class CategoryService {
         }
     }
 
+    /**
+     * Get all Categories and by Query in sorting date created
+     */
     static async getMany(query: string): Promise<ICategory[] | Error> {
         try {
             let category;

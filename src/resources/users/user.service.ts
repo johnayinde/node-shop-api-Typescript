@@ -54,6 +54,9 @@ export default class UserService {
         }
     }
 
+    /**
+     * Get all registered User
+     */
     static async getAllUsers(query: string): Promise<Error | User[]> {
         try {
             let users: User[];
