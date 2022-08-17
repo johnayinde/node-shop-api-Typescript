@@ -9,6 +9,10 @@ export default class UserService {
 
     static async registerUser(name: string, email: string, password: string) {
         try {
+            const userExist = await userModel.findOne({ email });
+
+            if (userExist) throw new Error('User Already exist');
+
             const createUser = await new userModel({
                 name,
                 email,
@@ -37,20 +41,15 @@ export default class UserService {
                 { createdAt: 0, updatedAt: 0 }
             );
 
-            if (!user)
-                throw new Error('Unable to fine user with tha Email Address');
+            if (!user) throw new Error('Invalid credentials');
 
             if (await user.isValidPassword(password)) {
-                console.log('create token');
-
                 const token = encodeToken(user);
-
-                console.log({ token, user });
                 return { token, user };
             }
             throw new Error('Invalid credentials');
-        } catch (error) {
-            throw new Error('Unable to login user');
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 
@@ -69,8 +68,8 @@ export default class UserService {
 
             if (!users) throw new Error('Unable to find users');
             return users;
-        } catch (error) {
-            throw new Error('Unable to login user');
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 }

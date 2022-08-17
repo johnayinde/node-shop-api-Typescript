@@ -3,7 +3,6 @@ import validation from '@/middleware/validation.middleware';
 import { validateLoginUser, validateRegisterUser } from './user.validation';
 import UserController from './user.controller';
 import {
-    verifyToken,
     verifyTokenAndAdmin,
 } from '@/middleware/authenticated.middleware';
 
@@ -18,6 +17,5 @@ userRoute
     .post(validation(validateLoginUser), UserController.login);
 
 userRoute.route('/all').get(verifyTokenAndAdmin, UserController.getAllUsers);
-userRoute.route('/').get(verifyTokenAndAdmin, UserController.getUser);
 
 export default userRoute;

@@ -36,16 +36,6 @@ class UserController {
         }
     };
 
-    static getUser = async (
-        req: Request,
-        res: Response,
-        next: NextFunction
-    ): Promise<Response | void> => {
-        if (!req.user) return next(new HttpException(404, 'No usser found'));
-
-        res.status(200).json({ user: req.user });
-    };
-
     static getAllUsers = async (
         req: Request,
         res: Response,
