@@ -13,6 +13,10 @@ export default class OrderService {
 
     static async create(userId: string) {
         try {
+            /**
+             * check if user exist and get all the carts belonging to the user
+             * and get all items
+             */
             const exist = await userModel.findById({ _id: userId });
             if (!exist) throw Error('User does not exist');
 
@@ -32,6 +36,8 @@ export default class OrderService {
                 payed: false,
             });
 
+            // create order if the user does not have a pending order to make
+            //
             console.log({ userOrder });
 
             if (!userOrder) {
@@ -46,20 +52,18 @@ export default class OrderService {
             } else {
                 throw Error('User has an unpaid orders');
             }
-
-            // console.log({ product, userCart });
         } catch (error: any) {
             throw new Error(error.message);
         }
     }
 
-    static async delete(id: string) {
+    static async delete(orderId: string) {
         try {
-            const exist = await orderModel.findById(id);
+            const exist = await orderModel.findById(orderId);
 
             if (!exist) throw Error('Order does not exist');
 
-            return await orderModel.findByIdAndDelete(id);
+            return await orderModel.findByIdAndDelete(orderId);
         } catch (error: any) {
             throw new Error(error.message);
         }
@@ -77,13 +81,13 @@ export default class OrderService {
         }
     }
 
-    static async payUserOrder(userId: string) {
+    static async payUserOrder(orderId: string, userId: string) {
         try {
-            const exist = await orderModel.findOne({ userId });
-            if (!exist) throw new Error('user does not have an order');
+            const exist = await orderModel.findById(orderId);
+            if (!exist) throw new Error('Order does not exist');
 
             if (exist.payed) {
-                throw new Error('User Orders has already been paid');
+                throw new Error('Order has already been paid');
             }
 
             return await orderModel.findOneAndUpdate(

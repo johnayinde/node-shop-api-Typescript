@@ -13,7 +13,7 @@ export default class OrderController {
             const order = await OrderService.create(userId);
             console.log({ order });
 
-            res.status(201).json({ order });
+            res.status(201).json({ payload: order });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -25,11 +25,11 @@ export default class OrderController {
         next: NextFunction
     ): Promise<Response | void> => {
         try {
-            const { id } = req.params;
+            const { orderId } = req.params;
 
-            await OrderService.delete(id);
+            await OrderService.delete(orderId);
 
-            res.status(201).json('Item Deleted');
+            res.status(200).json({ message: 'Order deleted successfully' });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -44,7 +44,7 @@ export default class OrderController {
             const order = await OrderService.getUserOrder(req.params.userId);
             console.log(req.params);
 
-            return res.status(201).json({ order });
+            return res.status(200).json({ payload: order });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -56,10 +56,15 @@ export default class OrderController {
         next: NextFunction
     ): Promise<Response | void> => {
         try {
-            const order = await OrderService.payUserOrder(req.params.userId);
+            const order = await OrderService.payUserOrder(
+                req.params.orderId,
+                req.params.userId
+            );
             console.log(req.params);
 
-            return res.status(201).json({ order });
+            return res
+                .status(201)
+                .json({ message: 'Order paid successfully', payload: order });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }

@@ -9,15 +9,15 @@ import OrderController from './order.controller';
 
 const orderRoute = Router();
 
-orderRoute.route('/:id').delete(verifyToken, OrderController.deleteOrder);
+orderRoute.route('/:orderId').delete(verifyToken, OrderController.deleteOrder);
 
 orderRoute
     .route('/:userId')
-    .post(verifyToken, validation(validateOrder), OrderController.createOrder)
-    .get(verifyTokenAndAdmin, OrderController.getUserOrder);
+    .post(verifyToken, OrderController.createOrder)
+    .get(verifyToken, OrderController.getUserOrder);
 
 orderRoute
-    .route('/:userId/pay')
-    .put(verifyTokenAndAdmin, OrderController.payOrders);
+    .route('/:orderId/:userId/pay')
+    .put(verifyToken, OrderController.payOrders);
 
 export default orderRoute;
