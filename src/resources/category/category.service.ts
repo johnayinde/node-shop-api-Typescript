@@ -1,4 +1,5 @@
 import CategoryModel from './category.model';
+import ProductModel from '../products/product.model';
 import ICategory from './category.interface';
 import { Types } from 'mongoose';
 
@@ -8,9 +9,14 @@ export default class CategoryService {
      */
 
     static async create(name: string) {
+        const transformedName = name.trim().toLowerCase();
         try {
+            const exist = await CategoryModel.exists({ name: transformedName });
+
+            if (exist) throw new Error('Category already exist');
+
             const category = await new CategoryModel({
-                name,
+                name: transformedName,
             }).save();
 
             return category;
@@ -51,7 +57,11 @@ export default class CategoryService {
             const exist = await CategoryModel.exists({ _id: id });
             if (!exist) throw new Error('Category does not exist');
 
-            return await CategoryModel.findByIdAndDelete(id);
+            const deleteCat = await CategoryModel.findByIdAndDelete(id);
+            await ProductModel.updateMany(
+                { categories: { $in: [deleteCat?._id] } },
+                { $pullAll: { categories: [deleteCat?._id] } }
+            );
         } catch (error: any) {
             throw new Error(error.message);
         }
@@ -72,9 +82,14 @@ export default class CategoryService {
             });
             console.log('formatedIds', formatIds);
 
-            return await CategoryModel.deleteMany({
+            await CategoryModel.deleteMany({
                 _id: { $in: formatIds },
             });
+
+            await ProductModel.updateMany(
+                { categories: { $in: formatIds } },
+                { $pullAll: { categories: formatIds } }
+            );
         } catch (error: any) {
             throw new Error(error.message);
         }

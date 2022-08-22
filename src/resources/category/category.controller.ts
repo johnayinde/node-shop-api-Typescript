@@ -47,12 +47,8 @@ class CategoryController {
         try {
             const { id } = req.params;
 
-            const doc = await CategoryService.delete(id);
-            console.log(doc);
-
-            if (!doc) return res.status(404).json('Item does not exist');
-
-            res.status(201).json({ payload: doc });
+            await CategoryService.delete(id);
+            res.status(200).json({ message: 'Category deleted successfully' });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -66,11 +62,10 @@ class CategoryController {
         try {
             const { categoryIds } = req.body;
 
-            const doc = await CategoryService.deleteMultiple(categoryIds);
-
-            if (!doc) return res.status(404).json('Items not deleted');
-
-            return res.status(201).json({ payload: doc });
+            await CategoryService.deleteMultiple(categoryIds);
+            return res
+                .status(200)
+                .json({ message: 'Categories deleted successfully' });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -86,7 +81,7 @@ class CategoryController {
         try {
             const categories = await CategoryService.getMany(newQuery);
 
-            return res.status(201).json({ payload: categories });
+            return res.status(200).json({ payload: categories });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -100,7 +95,7 @@ class CategoryController {
         try {
             const category = await CategoryService.getOne(req.params.id);
 
-            return res.status(201).json({ payload: category });
+            return res.status(200).json({ payload: category });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
