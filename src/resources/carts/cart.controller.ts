@@ -13,23 +13,7 @@ class CartController {
             const cart = await CartService.create(userId, productId, quantity);
             // console.log({ cart });
 
-            res.status(201).json({ cart });
-        } catch (error: any) {
-            next(new HttpException(400, error.message));
-        }
-    };
-
-    static updateCart = async (
-        req: Request,
-        res: Response,
-        next: NextFunction
-    ): Promise<Response | void> => {
-        try {
-            const { id } = req.params;
-
-            const updatedCart = await CartService.update(id, req.body);
-
-            res.status(201).json({ updatedCart });
+            res.status(201).json({ payload: cart });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -45,7 +29,7 @@ class CartController {
 
             await CartService.delete(id);
 
-            res.status(201).json('Item Deleted');
+            res.status(200).json({ message: 'Cart Item Deleted successfully' });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -61,7 +45,7 @@ class CartController {
         try {
             const carts = await CartService.getCarts(newQuery);
 
-            return res.status(201).json({ carts });
+            return res.status(200).json({ payload: carts });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -73,9 +57,11 @@ class CartController {
         next: NextFunction
     ): Promise<Response | void> => {
         try {
+            console.log('user cart');
+
             const cart = await CartService.getUserCart(req.params.userId);
 
-            return res.status(201).json({ cart });
+            return res.status(200).json({ payload: cart });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }

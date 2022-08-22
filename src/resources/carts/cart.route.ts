@@ -14,13 +14,8 @@ cartRoute
     .post(verifyToken, validation(validateCart), CartController.createCart)
     .get(verifyToken, CartController.getAllCarts);
 
-cartRoute
-    .route('/:id')
-    .put(verifyToken, validation(validateCart), CartController.updateCart)
-    .delete(verifyToken, CartController.deleteCart);
+cartRoute.route('/:id').delete(verifyToken, CartController.deleteCart);
 
-cartRoute
-    .route('/:userId')
-    .get(verifyTokenAndAdmin, CartController.getUserCart);
+cartRoute.route('/user/:userId').get(verifyToken, CartController.getUserCart);
 
 export default cartRoute;

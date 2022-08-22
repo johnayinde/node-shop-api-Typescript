@@ -7,14 +7,18 @@ import userModel from '../users/user.model';
 export default class CartService {
     /**
      * Create a new Product
+     *
+     *
      */
 
     static async create(userId: string, productId: string, quantity: number) {
         try {
+            /**
+             * Get the user product and check if the userId exist iin the database
+             * populate its products
+             */
             const product = await productService.getProduct(productId);
             const exist = await userModel.exists({ _id: userId });
-            console.log(exist);
-
             if (!exist) throw new Error('User does not exist');
 
             const userCart = await cartModel
@@ -23,8 +27,11 @@ export default class CartService {
                 })
                 .populate('products.productId');
 
-            // console.log({ product, userCart });
-
+            /**
+             *  if the user already have a cart
+             *  loop through its products and check and return
+             *  if the product already exist in the cart
+             */
             if (userCart) {
                 const userProduct = userCart.products.filter((item) => {
                     console.log(
@@ -39,6 +46,11 @@ export default class CartService {
 
                 console.log({ userProduct });
                 console.log(userProduct[0]);
+
+                /**
+                 *  get the product and check if its not undefined
+                 * then it update the product
+                 */
                 const getProductInCart = userProduct[0];
                 console.log('get length', getProductInCart != undefined);
 
@@ -67,6 +79,11 @@ export default class CartService {
                 } else {
                     console.log('push create');
 
+                    /**
+                     * user has a cart but product does not exist in the product list
+                     * push the product to the list and modify price and quantity
+                     */
+
                     const pushUserCart = await cartModel
                         .findOneAndUpdate(
                             { userId },
@@ -92,6 +109,11 @@ export default class CartService {
             } else {
                 console.log('fresh create');
 
+                /**
+                 * user is new and does not have a cart
+                 * create and save cart
+                 */
+
                 const newCart = await new cartModel({
                     userId,
                     total: product!.price * quantity,
@@ -109,26 +131,6 @@ export default class CartService {
         }
     }
 
-    static async update(id: string, cart: ICart) {
-        try {
-            const exist = await cartModel.exists({ _id: id });
-
-            if (!exist) throw new Error('Cart does not exist');
-
-            const updatedCart = await cartModel.findByIdAndUpdate(
-                id,
-                {
-                    $set: cart,
-                },
-                { new: true }
-            );
-
-            return updatedCart;
-        } catch (error: any) {
-            throw new Error(error.message);
-        }
-    }
-
     static async delete(id: string) {
         try {
             const exist = await cartModel.findById(id);
@@ -141,29 +143,15 @@ export default class CartService {
         }
     }
 
-    static async deleteMultiple(cartIds: string[]) {
-        try {
-            const formatIds: Types.ObjectId[] = [];
-
-            cartIds.forEach((id: string) => {
-                formatIds.push(new Types.ObjectId(id));
-            });
-
-            return await cartModel.deleteMany({
-                _id: { $in: formatIds },
-            });
-        } catch (error: any) {
-            throw new Error(error.message);
-        }
-    }
-
     static async getUserCart(userId: string) {
         try {
             const exist = await cartModel.exists({ userId });
 
             if (!exist) throw new Error('user cart does not exist');
 
-            return await cartModel.findOne({ userId });
+            return await cartModel
+                .findOne({ userId })
+                .populate('products.productId');
         } catch (error: any) {
             throw new Error(error.message);
         }
@@ -175,11 +163,17 @@ export default class CartService {
             if (query) {
                 console.log('sort');
 
-                carts = await cartModel.find().sort({ createdAt: -1 }).limit(5);
+                carts = await cartModel
+                    .find()
+                    .sort({ createdAt: -1 })
+                    .limit(5)
+                    .populate('products.productId');
+
                 return carts;
             }
 
-            carts = await cartModel.find();
+            carts = await cartModel.find().populate('products.productId');
+
             console.log('no sort');
 
             return carts;
