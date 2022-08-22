@@ -59,7 +59,7 @@ class ProductController {
 
             if (!doc) return res.status(404).json('Item does not exist');
 
-            res.status(201).json({ payload: doc });
+            res.status(200).json({ message: 'Product deleted successfully' });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -77,7 +77,7 @@ class ProductController {
 
             if (!doc) return res.status(404).json('Items not deleted');
 
-            return res.status(201).json({ payload: doc });
+            res.status(200).json({ message: 'Products deleted successfully' });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -93,7 +93,7 @@ class ProductController {
         try {
             const products = await ProductService.getProducts(newQuery);
 
-            return res.status(201).json({ payload: products });
+            return res.status(200).json({ payload: products });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -107,7 +107,7 @@ class ProductController {
         try {
             const product = await ProductService.getProduct(req.params.id);
 
-            return res.status(201).json({ payload: product });
+            return res.status(200).json({ payload: product });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }

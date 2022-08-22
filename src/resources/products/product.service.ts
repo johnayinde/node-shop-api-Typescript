@@ -92,7 +92,9 @@ export default class ProductService {
 
             if (!exist) throw new Error('Product does not exist');
 
-            const product = await productModel.findById(id);
+            const product = await productModel
+                .findById(id)
+                .populate('categories');
 
             return product;
         } catch (error: any) {
@@ -109,11 +111,12 @@ export default class ProductService {
                 products = await productModel
                     .find()
                     .sort({ createdAt: -1 })
-                    .limit(5);
+                    .limit(5)
+                    .populate('categories');
                 return products;
             }
 
-            products = await productModel.find();
+            products = await productModel.find().populate('categories');
             console.log('no sort');
 
             return products;

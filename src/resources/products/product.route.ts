@@ -5,9 +5,7 @@ import {
     validateProduct,
     validateUpdateProduct,
 } from './product.validation';
-import {
-    verifyTokenAndAdmin,
-} from '@/middleware/authenticated.middleware';
+import { verifyTokenAndAdmin } from '@/middleware/authenticated.middleware';
 import ProductController from './product.controller';
 
 const productRoute = Router();
