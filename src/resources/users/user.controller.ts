@@ -30,7 +30,7 @@ class UserController {
 
             const loginUser = await UserService.loginUser(email, password);
 
-            res.status(201).json({ ...loginUser });
+            res.status(200).json({ ...loginUser });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -45,7 +45,7 @@ class UserController {
         try {
             const users = await UserService.getAllUsers(query);
 
-            res.status(201).json({ users });
+            res.status(200).json({ users });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }

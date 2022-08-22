@@ -23,7 +23,6 @@ export default class UserService {
                 .findOne({ _id: createUser._id })
                 .select({ password: 0 });
 
-            // const accessToken = encodeToken(user);
             return user;
         } catch (error: any) {
             throw new Error(error.message);
